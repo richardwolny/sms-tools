@@ -27,11 +27,11 @@ def DFT(x):
     """
     ## Your code here
     N = x.size
-    nv = np.arange(N)
+    kv = np.arange(N)
     X = np.array([])
 
-    for k in nv:
-        s = np.exp(1j * 2 * np.pi * k / N * nv)
+    for k in kv:
+        s = np.exp(1j * 2 * np.pi * k / N * kv)
         X = np.append(X, sum(x * np.conjugate(s)))
 
     return X
