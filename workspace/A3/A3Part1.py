@@ -61,3 +61,14 @@ def minimizeEnergySpreadDFT(x, fs, f1, f2):
                            mX is (M/2)+1 samples long (M is to be computed)
     """
     ## Your code here
+    f1_rad = fs / f1
+    f2_rad = fs / f2
+    M = int((f1_rad * f2_rad) / gcd(f1_rad, f2_rad))
+
+    fftbuffer = x[0:M]
+    X = fft(fftbuffer)
+
+    mX = 20 * np.log10(np.abs(X[0:M/2+1]))
+
+    return mX
+
