@@ -56,3 +56,15 @@ def optimalZeropad(x, fs, f):
                         x appropriately (zero-padding length to be computed). mX is (N/2)+1 samples long
     """
     ## Your code here
+    M = x.size
+    samples_per_period = fs / f
+    periods = np.ceil(M / samples_per_period)
+    N = periods * samples_per_period
+
+    fftbuffer = np.zeros(N)
+    fftbuffer[0:M] = x[0:M]
+    X = fft(fftbuffer)
+
+    mX = 20 * np.log10(np.abs(X[0:N/2+1]))
+    return mX
+
