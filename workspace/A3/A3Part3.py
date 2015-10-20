@@ -49,3 +49,24 @@ def testRealEven(x):
         X (numpy array, possibly complex) = The M point DFT of dftbuffer 
     """
     ## Your code here
+    M = x.size
+    fftbuffer = np.zeros(M)
+    fftbuffer[:M/2 + 1] = x[M/2:]
+    fftbuffer[M/2 + 1:] = x[:M/2]
+    X = fft(fftbuffer)
+
+    isRealEven = True
+
+    if X[1].real != X[M-1].real:
+        isRealEven = False
+
+    if abs(X[1].imag) > 0.001:
+        isRealEven = False
+
+    if abs(X[M-1].imag) > 0.001:
+        isRealEven = False
+
+    mX = 20 * np.log10(np.abs(X[0:M/2+1]))
+
+    return isRealEven, fftbuffer, X
+
