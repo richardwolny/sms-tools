@@ -59,5 +59,18 @@ def suppressFreqDFTmodel(x, fs, N):
     M = len(x)
     w = get_window('hamming', M)
     outputScaleFactor = sum(w)
-    
+
     ## Your code here
+    print('M: ' + str(M) + ', fs: ' + str(fs) + ', N: ' + str(N))
+    filt = int(np.ceil(70.0 * (N / fs)))
+    print(filt)
+    print(sum( ((fs/2.0)* np.arange(N/2) /(N/2)) < 70 ) +1 )
+    mX, pX = dftAnal(x, w, N)
+    y = dftSynth(mX, pX, w.size) * outputScaleFactor
+
+    mX_filt = mX.copy()
+    mX_filt[range(0,filt + 1)] = -120
+    y_filt = dftSynth(mX_filt, pX, w.size) * outputScaleFactor
+
+    return y, y_filt
+
