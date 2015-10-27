@@ -61,4 +61,35 @@ def extractMainLobe(window, M):
     w = get_window(window, M)         # get the window 
     
     ### Your code here
-    
+    hM1 = int(math.floor((M+1)/2))
+    hM2 = int(math.floor(M/2))
+
+    N = 8*M
+    hN = N/2
+    fftbuffer = np.zeros(N)
+    fftbuffer[:hM1] = w[hM2:]
+    fftbuffer[N-hM2:] = w[:hM2]
+
+    X = fft(fftbuffer)
+    absX = abs(X)
+    absX[absX < np.finfo(float).eps] = np.finfo(float).eps
+    mX = 20*np.log10(absX)
+
+    mX1 = np.zeros(N)
+    mX1[:hN] = mX[hN:]
+    mX1[N-hN:] = mX[:hN]
+
+    min_index_m = hN
+    while True:
+      if mX1[min_index_m - 1] > mX1[min_index_m]:
+        break
+      min_index_m -= 1
+
+    min_index_p = hN
+    while True:
+      if mX1[min_index_p + 1] > mX1[min_index_p]:
+        break
+      min_index_p += 1
+
+    return mX1[min_index_m:min_index_p+1]
+
