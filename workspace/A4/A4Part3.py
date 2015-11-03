@@ -82,4 +82,29 @@ def computeEngEnv(inputFile, window, M, N, H):
     """
     
     ### your code here
-    
+    (fs, x) = UF.wavread(inputFile)
+    w = get_window(window, M)
+    mX, pX = stft.stftAnal(x, fs, w, N, H)
+
+    hz_per_bin = fs / N
+    low_index = int(3000.0 / hz_per_bin)
+    high_index = int(10000.0 / hz_per_bin)
+
+    hops = mX.shape[0]
+    env = np.zeros((hops, 2))
+    for i in range(hops):
+      low_band = mX[i][1:low_index+1]
+      high_band = mX[i][low_index+1:high_index+1]
+
+      low_energy = 0
+      for sample in low_band:
+        low_energy += (10 ** (sample / 20)) ** 2
+      env[i][0] = 10 * np.log10(low_energy)
+      high_energy = 0
+      for sample in high_band:
+        high_energy += (10 ** (sample / 20)) ** 2
+
+      env[i][1] = 10 * np.log10(high_energy)
+
+    return env
+
